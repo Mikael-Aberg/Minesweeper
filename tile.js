@@ -12,25 +12,36 @@ const NEIGHBOR_OPTIONS = [
 class Tile {
   x;
   y;
-  hasBomb;
+  hasBomb = false;
   isVisible = false;
   neighborsWithBombs = 0;
 
-  constructor(x, y, hasBomb) {
+  constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.hasBomb = hasBomb;
+  }
+
+  setBomb() {
+    this.hasBomb = true;
   }
 
   setVisible() {
     this.isVisible = true;
-    if (!this.hasBomb && this.neighborsWithBombs === 0) {
-      for (const pos of this.getNeighbors()) {
-        if (!board[pos.x][pos.y].isVisible && !board[pos.x][pos.y].hasBomb) {
-          board[pos.x][pos.y].setVisible();
-        }
+  }
+
+  getFlippableNeighbors() {
+    if(this.neighborsWithBombs !== 0){
+      return [];
+    }
+
+    const tiles = [];
+    for (const pos of this.getNeighbors()) {
+      if (!board[pos.x][pos.y].isVisible && !board[pos.x][pos.y].hasBomb) {
+        tiles.push(board[pos.x][pos.y]);
       }
     }
+
+    return tiles;
   }
 
   getNeighbors() {
